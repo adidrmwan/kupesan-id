@@ -33,6 +33,7 @@ class MuaPackageController extends Controller
                     ->first();
         $hargaPaket = MUADurasi::where('partner_id', $partner->id)->get();
 
+        // dd()
         return view('partner.mua.package.index', compact('partner', 'package', 'hargaPaket'));
     }
 
@@ -228,12 +229,17 @@ class MuaPackageController extends Controller
                     ->select('*')
                     ->first();
         $package = MUAPackage::where('id', $id)->get();
+
+
         $packageList = MUAPackage::where('id', $id)->first();
+        
         $partnerTag = MUAPackageType::join('mua_type', 'mua_type.id', '=', 'mua_package_type.package_id')->where('package_id', $packageList->id)->get();
+
         $durasiPaket = MUADurasi::where('package_id', $packageList->id)->get();
 
         return view('partner.mua.package.show', compact('package', 'partnerTag', 'partner', 'durasiPaket'));
     }
+
 
     /**
      * Show the form for editing the specified resource.

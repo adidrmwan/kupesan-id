@@ -183,52 +183,52 @@
                                   <div class="row">
                                   </div>
 <!-- FOTO EDIT -->
-<hr>
-<h5 style="text-align: center; ">Standby</h5>
-<small style="color: grey;">Jika Exclude Standby:
-  <ul>
-    <li>Waktu Standby: 0</li>
-  </ul>
-</small>
-<div class="row">
-  <div class="col-md-6">
-      <div class="form-group">
-          <label>Standby<small><b style="color:red;"> * </b></small></label>
-          <select  class="form-control" id="inlineFormCustomSelectPref" name="pg_standby" required>
-              <option selected value="">Pilih</option>
-              <option value="Include">Include</option>
-              <option value="Exclude">Exclude</option>
-          </select>
-          <div class="invalid-feedback">Wajib diisi.</div>
-      </div>
-  </div>
-  <div class="col-md-6">
-      <div class="form-group">
-          <label>Waktu Standby (jam)<small><b style="color:red;"> * </b></small></label>
-          <input type="number" min="0" max="1000" class="form-control" placeholder="Jumlah Foto" required="" name="pg_standby_jumlah">
-          <div class="invalid-feedback">Isi 0, jika Exclude Standby.</div>
-      </div>
-  </div>
-</div>
-<!-- FOTO EDIT -->
-<hr>
-<div class="row">
-  <div class="col-md-12">
-    <div class="form-group">
-      <label>Tags<small><b style="color:red;"> * </b></small></label>
-      <select id="tags-mua" class="form-control" name="tag[]" required=""></select>
-          <div class="invalid-feedback">Wajib diisi.</div>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <div class="form-group">
-      <label>Deskripsi Paket/Informasi Tambahan (Opsional)</label>
-      <textarea class="form-control" name="pg_desc" style="height: 100px;"></textarea>
-    </div>
-  </div>
-</div>
+                                  <hr>
+                                  <h5 style="text-align: center; ">Standby</h5>
+                                  <small style="color: grey;">Jika Exclude Standby:
+                                    <ul>
+                                      <li>Waktu Standby: 0</li>
+                                    </ul>
+                                  </small>
+                                  <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Standby<small><b style="color:red;"> * </b></small></label>
+                                            <select  class="form-control" id="inlineFormCustomSelectPref" name="pg_standby" required>
+                                                <option selected value="">Pilih</option>
+                                                <option value="Include">Include</option>
+                                                <option value="Exclude">Exclude</option>
+                                            </select>
+                                            <div class="invalid-feedback">Wajib diisi.</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Waktu Standby (jam)<small><b style="color:red;"> * </b></small></label>
+                                            <input type="number" min="0" max="1000" class="form-control" placeholder="Waktu Standby" required="" name="pg_standby_jumlah">
+                                            <div class="invalid-feedback">Isi 0, jika Exclude Standby.</div>
+                                        </div>
+                                    </div>
+                                  </div>
+                                  <!-- FOTO EDIT -->
+                                  <hr>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                        <label>Tags<small><b style="color:red;"> * </b></small></label>
+                                        <select id="tags-mua" class="form-control" name="tag[]" required=""></select>
+                                            <div class="invalid-feedback">Wajib diisi.</div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                        <label>Deskripsi Paket/Informasi Tambahan (Opsional)</label>
+                                        <textarea class="form-control" name="pg_desc" style="height: 100px;"></textarea>
+                                      </div>
+                                    </div>
+                                  </div>
 
                               </div>
                             </div>

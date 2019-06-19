@@ -37,6 +37,11 @@ class MUAPackage extends Model
         'pg_edited_jumlah',
         'pg_edited_saved',
         'pg_status',
+        'pg_retouch',
+        'pg_hairhijabdo',
+        'pg_desc',
+        'pg_standby',
+        'pg_standby_jumlah',
 
     ];
 

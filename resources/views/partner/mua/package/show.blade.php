@@ -11,7 +11,7 @@
                     </div>
                     <div class="content">
                         @foreach($package as $data)
-                        <form role="form" action="{{route('pg-package.update', ['id' => $data->id])}}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <form role="form" action="{{route('mua-package.update', ['id' => $data->id])}}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                         
                         {{ method_field('PATCH') }}
                         {{ csrf_field() }}
@@ -181,13 +181,13 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>MUA/Penata Rias</label>
-                                                <select  class="form-control" id="inlineFormCustomSelectPref" name="pg_mua" required>
-                                                    <option selected value="{{$data->pg_mua}}">{{$data->pg_mua}}</option>
-                                                    @if($data->pg_mua != 'Include')
+                                                <label>Retouch</label>
+                                                <select  class="form-control" id="inlineFormCustomSelectPref" name="pg_retouch">
+                                                    <option selected value="{{$data->pg_retouch}}">{{$data->pg_retouch}}</option>
+                                                    @if($data->pg_retouch != 'Include')
                                                     <option value="Include">Include</option>
                                                     @endif
-                                                    @if($data->pg_mua != 'Exclude')
+                                                    @if($data->pg_retouch != 'Exclude')
                                                     <option value="Exclude">Exclude</option>
                                                     @endif
                                                 </select>
@@ -198,13 +198,13 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>Stylist</label>
-                                                <select  class="form-control" id="inlineFormCustomSelectPref" name="pg_stylist" required>
-                                                    <option selected value="{{$data->pg_stylist}}">{{$data->pg_stylist}}</option>
-                                                    @if($data->pg_stylist != 'Include')
+                                                <label>Hairdo/Hijabdo</label>
+                                                <select  class="form-control" id="inlineFormCustomSelectPref" name="pg_hairhijabdo">
+                                                    <option selected value="{{$data->pg_hairhijabdo}}">{{$data->pg_hairhijabdo}}</option>
+                                                    @if($data->pg_hairhijabdo != 'Include')
                                                     <option value="Include">Include</option>
                                                     @endif
-                                                    @if($data->pg_stylist != 'Exclude')
+                                                    @if($data->pg_hairhijabdo != 'Exclude')
                                                     <option value="Exclude">Exclude</option>
                                                     @endif
                                                 </select>
@@ -213,28 +213,33 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <h5 style="text-align: center; ">Album Kolase</h5>
-                                    <small style="color: grey;">Jika Exclude Album Kolase:
-                                      <ul>
-                                        <li>Ukuran: Exclude.</li>
-                                        <li>Jumlah Halaman: 0.</li>
-                                        <li>Jumlah Foto: 0</li>
-                                      </ul>
+                                    <h5 style="text-align: center; ">Standby</h5>
+                                    <small style="color: grey;">Jika Exclude Standby:
+                                        <ul>
+                                          <li>Waktu Standby: 0</li>
+                                        </ul>
                                     </small>
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Album Kolase</label>
-                                                <select  class="form-control" id="inlineFormCustomSelectPref" name="pg_album_kolase" required>
-                                                    <option selected value="{{$data->pg_album_kolase}}">{{$data->pg_album_kolase}}</option>
-                                                    @if($data->pg_album_kolase != 'Include')
+                                                <label>Standby</label>
+                                                <select  class="form-control" id="inlineFormCustomSelectPref" name="pg_standby" >
+                                                    <option selected value="{{$data->pg_standby}}">{{$data->pg_standby}}</option>
+                                                    @if($data->pg_standby != 'Include')
                                                     <option value="Include">Include</option>
                                                     @endif
-                                                    @if($data->pg_album_kolase != 'Exclude')
+                                                    @if($data->pg_standby != 'Exclude')
                                                     <option value="Exclude">Exclude</option>
                                                     @endif
                                                 </select>
                                                 <div class="invalid-feedback">Wajib diisi.</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Waktu Standby (jam)<small><b style="color:red;"> * </b></small></label>
+                                                <input type="number" min="0" max="1000" class="form-control" placeholder="Waktu Standby" value="{{$data->pg_standby_jumlah}}" name="pg_standby_jumlah">
+                                                <div class="invalid-feedback">Isi 0, jika Exclude Standby.</div>
                                             </div>
                                         </div>
                                     </div>
@@ -242,7 +247,7 @@
                                         <div class="col-md-12">
                                           <div class="form-group">
                                             <label>Tags</label>
-                                            <select id="tags-photographer" class="form-control" name="tag[]"></select>
+                                            <select id="tags-mua" class="form-control" name="tag[]" required=""></select>
                                           </div>
                                         </div>
                                     </div>
