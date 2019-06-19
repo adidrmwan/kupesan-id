@@ -240,7 +240,7 @@
             </div>
                  
             <div class="col-sm-6 col-md-6">
-                @if(!empty($AllFotografer[0])) 
+                @if(!empty($AllPackage[0])) 
                 <section id="alacarte-offers" class="">
                     <div class="col-lg-12">
                         <div class="page-heading">
@@ -251,9 +251,9 @@
                         </div>
                         <div class="owl-carousel owl-theme owl-custom-arrow" id="owl-alacarte-offers">
                           <!-- <ul class="list-unstyled list-inline offer-price-1"> -->
-                          @foreach($AllFotografer as $listthem)    
+                          @foreach($AllPackage as $listthem)    
                             <!-- <li class="price"> -->
-                                @include('partner-profile.fotografer.paket')
+                                @include('partner-profile.mua.paket')
                             <!-- </li> -->
                             @endforeach
                           <!-- </ul> -->

@@ -38,6 +38,7 @@ Route::get('detail/partner/spotfoto', 'StudioController@detailFotostudio')->name
 Route::get('detail/partner/busana', 'StudioController@detailKebaya')->name('detail.kebaya');
 Route::get('detail/partner/freespot', 'StudioController@detailFreeSpot')->name('detail.freespot');
 Route::get('detail/partner/fotografer', 'StudioController@detailFotografer')->name('detail.fotografer');
+Route::get('detail/partner/penata-rias', 'StudioController@detailMUA')->name('detail.mua');
 
 
 Route::get('detail/partner/spotfoto/paket', 'StudioController@detailPaketSpot')->name('detail.paket.spot');
@@ -121,12 +122,33 @@ Route::group(['prefix' => '2', 'middleware' => ['auth','role:user']], function()
             Route::get('9', 'BookingController@step9')->name('pg.step9');
             Route::post('info', 'CustomerController@showKebayaInfo')->name('pg.booking.info');
         });
+    });
 
+    // MUA 
+    Route::namespace('Mua')
+    ->group(function () {
+        Route::group(['prefix' => 'booking/penata-rias'], function(){
+            Route::get('2', 'BookingController@step2')->name('mua.step2');
+            Route::post('2', 'BookingController@submitStep2')->name('mua.submit.step2');
+            Route::get('2a', 'BookingController@step2a')->name('mua.step2a');
+            Route::post('2a', 'BookingController@submitStep2a')->name('mua.submit.step2a');
+            Route::get('3', 'BookingController@step3')->name('mua.step3');
+            Route::post('3', 'BookingController@submitStep3')->name('mua.submit.step3');
+            Route::get('4', 'BookingController@step4')->name('mua.step4');
+            Route::post('4', 'BookingController@submitStep4')->name('mua.submit.step4');
+            Route::get('6', 'BookingController@step6')->name('mua.step6');
+            Route::post('7', 'BookingController@step7')->name('mua.step7');
+            Route::post('8', 'BookingController@step8')->name('mua.step8');
+            Route::post('9', 'BookingController@uploadBukti')->name('mua.upload.bukti');
+            Route::get('9', 'BookingController@step9')->name('mua.step9');
+            Route::post('info', 'CustomerController@showKebayaInfo')->name('mua.booking.info');
+        });
     });
 });
 Route::get('/booking/busana/1', 'KebayaBookingController@step1')->name('kebaya.step1');
 Route::get('/booking/ps/1', 'BookingController@step1')->name('ask.page');
 Route::get('/booking/pg/1', 'Photographer\BookingController@step1')->name('pg.step1');
+Route::get('/booking/penata-rias/1', 'Mua\BookingController@step1')->name('mua.step1');
 
 //Route untuk studio foto
 Route::get('/studio/detail', 'StudioController@studiodetail')->name('studio-detail');

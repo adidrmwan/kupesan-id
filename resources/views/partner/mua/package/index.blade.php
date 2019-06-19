@@ -13,10 +13,10 @@
                         <thead>
                             <th>No</th>
                             <th>Nama Paket</th>
-                            <th>Kategori Paket</th>
-                            <th>Mua</th>
-                            <th>Print Size</th>
-                            <th>Edited Photo (pcs)</th>
+                            <!-- <th>Kategori Paket</th> -->
+                            <th>Retouch</th>
+                            <th>Hairdo/Hijabdo</th>
+                            <th>Waktu Standby</th>
                             <th>Durasi Paket</th>
                             <th>Harga Paket</th>
                             <th>Edit</th>
@@ -27,10 +27,10 @@
                             <tr>
                                 <td>{{$key + 1}}</td>
                                 <td class="text-uppercase">{{$data->pg_name}}</td>
-                                <td>{{$data->pg_category}}</td>
-                                <td>{{$data->pg_mua}}</td>
-                                <td>{{$data->pg_printed_size}} R</td>
-                                <td>{{$data->pg_edited_jumlah}} lembar</td>
+                                <!-- <td>{{$data->pg_category}}</td> -->
+                                <td>{{$data->pg_retouch}}</td>
+                                <td>{{$data->pg_hairhijabdo}} R</td>
+                                <td>{{$data->pg_standby_jumlah}} jam</td>
                                 <td>
                                     @foreach($hargaPaket as $harga)
                                         @if($data->id == $harga->package_id)
@@ -46,12 +46,12 @@
                                     @endforeach
                                 </td>
                                 <td>
-                                    <a href="{{route('pg-package.show', ['id' => $data->id])}}">
+                                    <a href="{{route('mua-package.show', ['id' => $data->id])}}">
                                               <button type="submit" class="btn btn-primary "><i class="fa fa-pencil-square-o"></i>Edit</button>
                                     </a>
                                 </td>   
                                 <td>
-                                    <a href="{{route('delete.pg.package', ['package_id' => $data->id])}}" class="btn btn-info btn-sm pull-right" onclick="return confirm('Are you sure want to Delete?')">Delete</a>
+                                    <a href="{{route('delete.mua.package', ['package_id' => $data->id])}}" class="btn btn-info btn-sm pull-right" onclick="return confirm('Are you sure want to Delete?')">Delete</a>
 
 
                                 </td>

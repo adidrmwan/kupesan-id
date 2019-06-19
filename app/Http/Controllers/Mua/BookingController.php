@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Photographer;
+namespace App\Http\Controllers\Mua;
 
+use MaddHatter\LaravelFullcalendar\Facades\Calendar;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\PGLocationAddress;
-use App\PGPackage;
+use App\MUALocationAddress;
+use App\MUAPackage;
 use App\Partner;
-use App\PGDurasi;
-use App\PGCheck;
-use App\PGBooking;
-use App\PGWishlist;
+use App\MUADurasi;
+use App\MUACheck;
+use App\MUABooking;
+use App\MUAWishlist;
 use App\Jam;
 use App\User;
 use App\Provinces;
@@ -29,19 +30,19 @@ class BookingController extends Controller
     public function step1(Request $request) 
     {
         $package_id = $request->package_id;
-        $package = PGPackage::where('id', $package_id)->get();
-        $id = PGPackage::where('id', $package_id)->first();
+        $package = MUAPackage::where('id', $package_id)->get();
+        $id = MUAPackage::where('id', $package_id)->first();
         $partner = Partner::where('user_id', $id->partner_id)->first();
         $provinsi = Provinces::where('id', $partner->pr_prov)->first();
         $kota = Regencies::where('id', $partner->pr_kota)->first();
         $kecamatan = Districts::where('id', $partner->pr_kec)->first();
-        $durasiPaket = PGDurasi::where('package_id', $package_id)->first();
+        $durasiPaket = MUADurasi::where('package_id', $package_id)->first();
 
         if (Auth::user()) {
-            return redirect()->intended(route('pg.step2', ['package_id' => $package_id]));
+            return redirect()->intended(route('mua.step2', ['package_id' => $package_id]));
         }
 
-        return view('online-booking.pg.step1', ['package' => $package, 'pid' => $package_id, 'partner_id' => $partner->user_id], compact('package', 'partner', 'provinsi', 'kota', 'kecamatan', 'durasiPaket'));
+        return view('online-booking.mua.step1', ['package' => $package, 'pid' => $package_id, 'partner_id' => $partner->user_id], compact('package', 'partner', 'provinsi', 'kota', 'kecamatan', 'durasiPaket'));
  
     }
 
@@ -49,22 +50,22 @@ class BookingController extends Controller
     {
         if (Auth::user()) {
             $package_id = $request->package_id;
-            $package = PGPackage::where('id', $package_id)->get();
-            $id = PGPackage::where('id', $package_id)->first();
+            $package = MUAPackage::where('id', $package_id)->get();
+            $id = MUAPackage::where('id', $package_id)->first();
             $partner_id = $id->partner_id;
             $partner = Partner::where('user_id', $partner_id)->first();
             $provinsi = Provinces::where('id', $partner->pr_prov)->first();
             $kota = Regencies::where('id', $partner->pr_kota)->first();
             $kecamatan = Districts::where('id', $partner->pr_kec)->first();
-            $booking_check = PGCheck::join('pg_package', 'pg_package.id', '=', 'pg_booking_check.package_id')
+            $booking_check = MUACheck::join('pg_package', 'pg_package.id', '=', 'pg_booking_check.package_id')
                             ->where('pg_booking_check.package_id', $package_id)
                             ->where('pg_booking_check.kuantitas', '=', 1)
                             ->select('booking_date as disableDates')->get();
             $disableDates = array_column($booking_check->toArray(), 'disableDates');
             $jam = Jam::where('num_hour', '>=', $partner->open_hour)->where('num_hour', '<', $partner->close_hour)->get();
-            $durasiPaket = PGDurasi::where('package_id', $package_id)->first();
+            $durasiPaket = MUADurasi::where('package_id', $package_id)->first();
             if(empty($request->booking_date)) {
-                return view('online-booking.pg.step2', compact('package','package_id','partner_id','partner', 'pu', 'disableDates', 'provinsi', 'kota', 'kecamatan', 'durasiPaket', 'jam'));
+                return view('online-booking.mua.step2', compact('package','package_id','partner_id','partner', 'pu', 'disableDates', 'provinsi', 'kota', 'kecamatan', 'durasiPaket', 'jam'));
             }
         }
         return redirect()->route('login');
@@ -83,13 +84,13 @@ class BookingController extends Controller
             $start_time = $request->jam_mulai.':00:00';
         }
         $start_booking = date('Y-m-d H:i:s', strtotime("$start_date $start_time"));
-        $package = PGPackage::find($package_id);
+        $package = MUAPackage::find($package_id);
         $partner = Partner::where('user_id', $package->partner_id)->first();
         $partner_id = $package->partner_id;
-        $cek_booking = PGBooking::where('user_id', Auth::user()->id)->where('package_id', $package_id)->where('partner_id', $partner_id)->whereDate('start_date', '=', $start_date)->first();
+        $cek_booking = MUABooking::where('user_id', Auth::user()->id)->where('package_id', $package_id)->where('partner_id', $partner_id)->whereDate('start_date', '=', $start_date)->first();
 
         if(empty($cek_booking)) {
-            $booking = new PGBooking();
+            $booking = new MUABooking();
             $booking->user_id = Auth::user()->id;
             $booking->package_id = $package_id;
             $booking->partner_id = $package->partner_id;
@@ -100,23 +101,23 @@ class BookingController extends Controller
             $booking_id = $booking->booking_id;
         } else {
             $booking_id = $cek_booking->booking_id;
-            $booking = PGBooking::find($booking_id);
+            $booking = MUABooking::find($booking_id);
             $booking->start_date = $start_booking;
             $booking->start_time = $request->jam_mulai;
             $booking->save();
         }
 
-        return redirect()->intended(route('pg.step2a', ['bid' => $booking_id]));
+        return redirect()->intended(route('mua.step2a', ['bid' => $booking_id]));
     }
 
     public function step2a(Request $request) 
     {
         $booking_id = $request->bid;
-        $booking = PGBooking::find($booking_id);
+        $booking = MUABooking::find($booking_id);
         $package_id = $booking->package_id;
         $partner_id = $booking->partner_id;
-        $package = PGPackage::where('id', $package_id)->get();
-        $package2 = PGPackage::find($package_id);
+        $package = MUAPackage::where('id', $package_id)->get();
+        $package2 = MUAPackage::find($package_id);
         $partner = Partner::where('user_id', $partner_id)->first();
         
         $tanggalPenyewaan = $booking->start_date;
@@ -124,17 +125,17 @@ class BookingController extends Controller
         $provinsi = Provinces::where('id', $partner->pr_prov)->first();
         $kota = Regencies::where('id', $partner->pr_kota)->first();
         $kecamatan = Districts::where('id', $partner->pr_kec)->first();
-        $durasiPaket = PGDurasi::where('package_id', $package_id)->first();
+        $durasiPaket = MUADurasi::where('package_id', $package_id)->first();
         $makslokasi = $package2->pg_location_jumlah;
         
-        return view('online-booking.pg.step2a', compact('package','package_id','partner_id','partner', 'durasiPaket', 'tanggalPenyewaan', 'booking_id', 'provinsi', 'kota', 'kecamatan', 'jam', 'provinces', 'makslokasi'));
+        return view('online-booking.mua.step2a', compact('package','package_id','partner_id','partner', 'durasiPaket', 'tanggalPenyewaan', 'booking_id', 'provinsi', 'kota', 'kecamatan', 'jam', 'provinces', 'makslokasi'));
     }
 
     public function submitStep2a(Request $request)
     {
         $user = Auth::user();
         $booking_id = $request->booking_id;
-        $booking = PGBooking::find($booking_id);
+        $booking = MUABooking::find($booking_id);
 
         $package_id = $booking->package_id;
         $start_date = $booking->start_date;
@@ -142,10 +143,10 @@ class BookingController extends Controller
 
         $time_booking = '00:00:00';
         $start_booking = date('Y-m-d H:i:s', strtotime("$start_date $time_booking"));
-        $pg_booking_check = PGCheck::where('package_id', $package_id)->where('booking_date', $start_booking)->first();
+        $pg_booking_check = MUACheck::where('package_id', $package_id)->where('booking_date', $start_booking)->first();
 
         if (empty($pg_booking_check)) {
-            $pg_booking_check = new PGCheck();
+            $pg_booking_check = new MUACheck();
             $pg_booking_check->package_id = $package_id;
             $pg_booking_check->booking_date = $start_booking;
             $pg_booking_check->kuantitas = 1;
@@ -154,7 +155,7 @@ class BookingController extends Controller
 
             $endtime = '23:59:59';
             $end_date = date('Y-m-d H:i:s', strtotime("$start_date $endtime"));
-            $package = PGPackage::where('id', $package_id)->first();
+            $package = MUAPackage::where('id', $package_id)->first();
 
             $booking->end_date = $end_date;
             $booking->end_time = 23;
@@ -166,7 +167,7 @@ class BookingController extends Controller
             $booking->partner_name = $package->partner_name;
             $booking->save();
             
-            $wishlist = new PGWishlist();
+            $wishlist = new MUAWishlist();
             $wishlist->user_id = Auth::user()->id;
             $wishlist->booking_id = $booking_id;
             $wishlist->wl_category = "all";
@@ -178,7 +179,7 @@ class BookingController extends Controller
 
             for ($i=0; $i < $makslokasi; $i++) { 
                 if ($i==0) {
-                    $locationadd = new PGLocationAddress();
+                    $locationadd = new MUALocationAddress();
                     $locationadd->user_id = Auth::user()->id;
                     $locationadd->booking_id = $booking_id;
                     $locationadd->loc_name = $request->location_name_1;
@@ -186,7 +187,7 @@ class BookingController extends Controller
                     $locationadd->flag = 1;
                     $locationadd->save();
                 } else {
-                    $locationadd = new PGLocationAddress();
+                    $locationadd = new MUALocationAddress();
                     $locationadd->user_id = Auth::user()->id;
                     $locationadd->booking_id = $booking_id;
                     $locationadd->loc_name = $request->location_name[$i-1];
@@ -196,10 +197,10 @@ class BookingController extends Controller
                 }
             }
         } elseif (Auth::user()->id != $pg_booking_check->user_id) {
-            return redirect()->route('pg.step2', ['package_id' => $package_id])->with('warning', 'Jasa Fotografer sudah penuh. Silahkan cari tanggal lain.');
+            return redirect()->route('mua.step2', ['package_id' => $package_id])->with('warning', 'Jasa Fotografer sudah penuh. Silahkan cari tanggal lain.');
         } else {
-            $package = PGPackage::where('id', $package_id)->first();
-            $pglog = PGLocationAddress::where('user_id', Auth::user()->id)->where('booking_id', $booking_id)->get();
+            $package = MUAPackage::where('id', $package_id)->first();
+            $pglog = MUALocationAddress::where('user_id', Auth::user()->id)->where('booking_id', $booking_id)->get();
             foreach ($pglog as $key => $locationadd) {
                 if ($locationadd->flag == 1) {
                     $locationadd->loc_name = $request->location_name_1;
@@ -213,45 +214,45 @@ class BookingController extends Controller
             }
         }
 
-        return redirect()->intended(route('pg.step3', ['bid' => $booking_id]));
+        return redirect()->intended(route('mua.step3', ['bid' => $booking_id]));
     }
 
     public function step3(Request $request)
     {
         $booking_id = $request->bid;
-        $booking = PGBooking::find($booking_id);
+        $booking = MUABooking::find($booking_id);
         // dd($booking);
         $package_id = $booking->package_id;
 
         $provinces = Provinces::where('name', 'JAWA TIMUR')->get();
-        $package = PGPackage::where('id', $package_id)->get();
-        $package2 = PGPackage::where('id', $package_id)->first();
+        $package = MUAPackage::where('id', $package_id)->get();
+        $package2 = MUAPackage::where('id', $package_id)->first();
         $partner = Partner::where('user_id', $package2->partner_id)->first();
         $partner_id = $package2->partner_id;
         $provinsi = Provinces::where('id', $partner->pr_prov)->first();
         $kota = Regencies::where('id', $partner->pr_kota)->first();
         $kecamatan = Districts::where('id', $partner->pr_kec)->first();
-        $durasiPaket = PGDurasi::where('package_id', $package_id)->first();
+        $durasiPaket = MUADurasi::where('package_id', $package_id)->first();
         
-        $detail_pesanan = PGBooking::where('booking_id', $booking_id)->get();
-        $pglog = PGLocationAddress::where('user_id', Auth::user()->id)->where('booking_id', $booking_id)->get();
+        $detail_pesanan = MUABooking::where('booking_id', $booking_id)->get();
+        $pglog = MUALocationAddress::where('user_id', Auth::user()->id)->where('booking_id', $booking_id)->get();
 
-        return view('online-booking.pg.step4', compact('partner', 'partner_id', 'package_id', 'package', 'package2', 'booking', 'booking_id', 'pu', 'provinces', 'provinsi', 'kota', 'kecamatan', 'durasiPaket', 'detail_pesanan', 'pglog'));    
+        return view('online-booking.mua.step4', compact('partner', 'partner_id', 'package_id', 'package', 'package2', 'booking', 'booking_id', 'pu', 'provinces', 'provinsi', 'kota', 'kecamatan', 'durasiPaket', 'detail_pesanan', 'pglog'));    
 
     }
 
     public function submitStep4(Request $request)
     {
-        $booking = PGBooking::find($request->booking_id);
+        $booking = MUABooking::find($request->booking_id);
         $partner_id = $booking->partner_id;
         $package_id = $booking->package_id;
         $partner = Partner::where('user_id', $partner_id)->first();
-        $package = PGPackage::where('id', $package_id)->get();
-        $package2 = PGPackage::where('id', $package_id)->first();
+        $package = MUAPackage::where('id', $package_id)->get();
+        $package2 = MUAPackage::where('id', $package_id)->first();
         
         if ($booking->booking_status == 'cek_ketersediaan_online' || $booking->booking_status == 'un_approved') {
-            $book = PGBooking::where('booking_id', $booking->booking_id)->select('booking_id')->first()->toArray();
-            $user = PGBooking::join('pg_package', 'pg_package.id', '=', 'pg_booking.package_id')
+            $book = MUABooking::where('booking_id', $booking->booking_id)->select('booking_id')->first()->toArray();
+            $user = MUABooking::join('pg_package', 'pg_package.id', '=', 'pg_booking.package_id')
                     ->join('pg_location_address', 'pg_location_address.booking_id', '=', 'pg_booking.booking_id')
                     ->join('partner', 'pg_booking.partner_id', '=', 'partner.user_id')
                     ->join('users', 'users.id', '=', 'partner.user_id')
@@ -276,35 +277,35 @@ class BookingController extends Controller
         $provinsi = Provinces::where('id', $partner->pr_prov)->first();
         $kota = Regencies::where('id', $partner->pr_kota)->first();
         $kecamatan = Districts::where('id', $partner->pr_kec)->first();
-        $durasiPaket = PGDurasi::where('package_id', $package_id)->first();
+        $durasiPaket = MUADurasi::where('package_id', $package_id)->first();
         
 
-        return view('online-booking.pg.step5', compact('partner', 'package', 'provinsi', 'kota', 'kecamatan', 'durasiPaket'));
+        return view('online-booking.mua.step5', compact('partner', 'package', 'provinsi', 'kota', 'kecamatan', 'durasiPaket'));
     }
 
     public function step6(Request $request)
     {
         if (Auth::check()) {
             $user_id = Auth::user()->id;
-            $booking = PGBooking::find($request->bid);
+            $booking = MUABooking::find($request->bid);
             $package_id = $booking->package_id;
             $partner_id = $booking->partner_id;
             $bid = $booking->booking_id;
 
-            $package = PGPackage::where('id', $package_id)->get();
-            $package2 = PGPackage::where('id', $package_id)->first();
+            $package = MUAPackage::where('id', $package_id)->get();
+            $package2 = MUAPackage::where('id', $package_id)->first();
             $partner = Partner::where('user_id', $partner_id)->first();
             $provinsi = Provinces::where('id', $partner->pr_prov)->first();
             $kota = Regencies::where('id', $partner->pr_kota)->first();
             $kecamatan = Districts::where('id', $partner->pr_kec)->first();
-            $durasiPaket = PGDurasi::where('package_id', $package_id)->first();
-            $pglog = PGLocationAddress::where('user_id', Auth::user()->id)->where('booking_id', $bid)->get();
+            $durasiPaket = MUADurasi::where('package_id', $package_id)->first();
+            $pglog = MUALocationAddress::where('user_id', Auth::user()->id)->where('booking_id', $bid)->get();
 
-            $review = PGBooking::join('pg_package', 'pg_package.id', '=', 'pg_booking.package_id')
+            $review = MUABooking::join('pg_package', 'pg_package.id', '=', 'pg_booking.package_id')
                 ->select('pg_package.*', 'pg_booking.*')
                 ->where('booking_id', $bid)->get();
 
-            return view('online-booking.pg.step6', compact('bid', 'review', 'package', 'package2', 'partner', 'provinsi', 'kota', 'kecamatan', 'durasiPaket', 'pglog'));
+            return view('online-booking.mua.step6', compact('bid', 'review', 'package', 'package2', 'partner', 'provinsi', 'kota', 'kecamatan', 'durasiPaket', 'pglog'));
         }
 
         return redirect()->route('index');
@@ -315,10 +316,10 @@ class BookingController extends Controller
         $mytime = Carbon::now();
         $waktu = $mytime->toDateTimeString();        
         $bid = $request->bid;
-        $booking = PGBooking::find($request->bid);
+        $booking = MUABooking::find($request->bid);
 
         if(!empty($booking->upload_bukti_at)) {
-            return redirect()->intended(route('pg.step9', ['bid' => $bid])); 
+            return redirect()->intended(route('mua.step9', ['bid' => $bid])); 
         }
 
         if(empty($booking->booking_at)) {
@@ -330,28 +331,28 @@ class BookingController extends Controller
         if($waktu >= $booking->booking_at) {
             $booking->booking_status = 'booking-failed';
             $booking->save();
-            return view('online-booking.pg.failed');
+            return view('online-booking.mua.failed');
         }
 
         $booking->booking_status = 'on_pembayaran';
         $booking->save();
         $deadline = $booking->booking_at;
 
-        $review = PGBooking::join('pg_package', 'pg_package.id', '=', 'pg_booking.package_id')
+        $review = MUABooking::join('pg_package', 'pg_package.id', '=', 'pg_booking.package_id')
                 ->select('pg_package.*', 'pg_booking.*')
                 ->where('booking_id', $bid)->get();
 
-        return view('online-booking.pg.step7', compact('review', 'bid', 'deadline'));
+        return view('online-booking.mua.step7', compact('review', 'bid', 'deadline'));
     }
 
     public function step8(Request $request)
     {   
         $bid = $request->bid;
-        $booking = PGBooking::find($bid);
+        $booking = MUABooking::find($bid);
         if(!empty($booking->upload_bukti_at)) {
-            return redirect()->intended(route('pg.step9', ['bid' => $bid])); 
+            return redirect()->intended(route('mua.step9', ['bid' => $bid])); 
         }
-        return view('online-booking.pg.step8', compact('bid'));
+        return view('online-booking.mua.step8', compact('bid'));
     }
 
     public function uploadBukti(Request $request)
@@ -359,7 +360,7 @@ class BookingController extends Controller
         $mytime = Carbon::now();
         $time = $mytime->toDateTimeString();    
         $bid = $request->bid;
-        $booking = PGBooking::find($bid);
+        $booking = MUABooking::find($bid);
         if(empty($booking->upload_bukti_at)) {
             $booking->bukti_transfer = 'PG_' . $booking->booking_date . '_' . $booking->booking_id . '_' . $booking->user_id. '_' . $booking->booking_total;
             $booking->upload_bukti_at = $time;
@@ -382,21 +383,21 @@ class BookingController extends Controller
             $foto = $request->file('bukti_pembayaran');
             $foto_name = $foto_new . '.' .$foto->getClientOriginalExtension();
             Image::make($foto)->save( public_path('/bukti_pembayaran/' . $foto_name ) );
-            $booking = PGBooking::find($bid);
+            $booking = MUABooking::find($bid);
             $booking->save();
         }    
         
         
-        return redirect()->intended(route('pg.step9', ['bid' => $bid])); 
+        return redirect()->intended(route('mua.step9', ['bid' => $bid])); 
     }
 
     public function step9(Request $request)
     { 
         $bid = $request->bid;
-        $review = PGBooking::join('pg_package', 'pg_package.id', '=', 'pg_booking.package_id')
+        $review = MUABooking::join('pg_package', 'pg_package.id', '=', 'pg_booking.package_id')
                 ->select('pg_package.*', 'pg_booking.*')
                 ->where('booking_id', $bid)->get();
 
-        return view('online-booking.pg.step9', ['review' => $review]);
+        return view('online-booking.mua.step9', ['review' => $review]);
     }
 }

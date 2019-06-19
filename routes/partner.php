@@ -40,15 +40,27 @@ Route::group(['middleware' => ['auth','role:partner']], function(){
     Route::namespace('Mua')
     ->group(function () {
         Route::resource('mua-package', 'MuaPackageController');
+        Route::get('/mua-package/delete', 'MuaPackageController@deletePackage')->name('delete.mua.package');
         Route::group(['prefix' => 'mua'], function(){
+            Route::get('dashboard', 'MuaPartnerController@dashboard')->name('mua.dashboard');
             Route::get('profile', 'MuaPartnerController@profile')->name('mua.profile');
             Route::post('profile', 'MuaPartnerController@updateProfile')->name('mua.profile.update');
+            Route::get('approve/booking', 'AdminController@approveBooking')->name('mua.partner.approve.booking');
+            Route::get('cancel/booking', 'MuaPartnerController@cancelBooking')->name('mua.partner.cancel.booking');
+            Route::get('offline/1', 'MuaPartnerController@showStep1')->name('mua.off-booking');
+            Route::get('offline/2', 'MuaPartnerController@showStep2')->name('mua.off-booking.step2');
+            Route::post('offline/2', 'MuaPartnerController@submitStep2')->name('mua.off-booking.step2.submit');
+            Route::get('offline/3', 'MuaPartnerController@showStep3')->name('mua.off-booking.step3');
+            Route::post('offline/3', 'MuaPartnerController@submitStep3')->name('mua.off-booking.step3.submit');
+            Route::post('offline/4', 'MuaPartnerController@submitStep4')->name('mua.off-booking.step4.submit');
             Route::get('schedule', 'MuaPartnerController@showBookingSchedule')->name('mua.schedule');
-            Route::get('/booking/offline/3/1', 'MuaBookingController@showStep1')->name('mua.off-booking');
-            Route::get('/form/dayoff/3', 'MuaPartnerController@showFormDayOff')->name('mua.form.dayoff');
-            Route::post('/form/dayoff/3', 'MuaPartnerController@submitFormDayOff')->name('mua.form.dayoff.submit');
-            Route::get('/booking/history/3', 'MuaPartnerController@showBookingHistory')->name('mua.history');
-
+            Route::get('schedule/detail', 'MuaPartnerController@showDetailBooking')->name('mua.detail.booking');
+            Route::get('finished', 'MuaPartnerController@bookingFinished')->name('mua.booking.finished');
+            Route::get('finished/online', 'MuaPartnerController@bookingFinishedOnline')->name('mua.booking.finished.online');
+            Route::get('offline/cancel', 'MuaPartnerController@offlineCancel')->name('mua.booking.cancel');
+            Route::get('history', 'MuaPartnerController@showBookingHistory')->name('mua.history');
+            Route::get('dayoff', 'MuaPartnerController@showFormDayOff')->name('mua.form.dayoff');
+            Route::post('dayoff', 'MuaPartnerController@submitFormDayOff')->name('mua.form.dayoff.submit');
         });
     });
     // fotostudio

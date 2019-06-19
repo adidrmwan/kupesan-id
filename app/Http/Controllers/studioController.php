@@ -16,6 +16,7 @@ use App\Tnc;
 use App\SpotAddress;
 use App\SpotFacilities;
 use App\PGPackage;
+use App\MUAPackage;
 
 class StudioController extends Controller
 {
@@ -143,6 +144,29 @@ class StudioController extends Controller
         $fasilitas = SpotFacilities::where('package_id', $package_id)->get();
         
         return view('partner-profile.freespot.spot.detail', compact('provinsi', 'kota', 'kecamatan', 'address', 'fasilitas', 'partner', 'package2', 'package', 'address2'));
+    }
+
+    public function detailMUA(Request $request)
+    {
+        $user_id = $request->id;
+        $booking_date = $request->booking_date;
+        $detail = Partner::where('user_id', $user_id)->get();
+        $partner = Partner::where('user_id', $user_id)->first();
+        
+        $provinsi = Provinces::where('id', $partner->pr_prov)->get();
+        $kota = Regencies::where('id', $partner->pr_kota)->first();
+        $kecamatan = Districts::where('id', $partner->pr_kec)->first();
+        // dd($kecamatan);
+        $fasilitas = FasilitasPartner::where('user_id', $user_id)->get();
+        $tnc = Tnc::where('partner_id', $user_id)->get();
+        $album = Album::where('user_id', $user_id)->get();
+
+        
+        $AllPackage = MUAPackage::where('partner_id', $user_id)
+                    ->where('status', '1')
+                    ->get();
+
+        return view('partner-profile.mua.detail', ['detail' => $detail, 'album' => $album, 'fasilitas' => $fasilitas, 'booking_date' => $booking_date], compact('provinsi', 'kota', 'kecamatan','AllPackage', 'tnc'));
     }
     
 }

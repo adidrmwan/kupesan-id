@@ -40,7 +40,7 @@
             @if(Auth::check())  
             <p style="text-align:center;"><span>Rp</span>&nbsp;&nbsp;{{number_format($listthem->pkg_price_them, 0, ',', '.')}} / Paket </p>
             @endif
-            <a href="{{route('pg.step1', ['package_id' => $listthem->id])}}">
+            <a href="{{route('mua.step1', ['package_id' => $listthem->id])}}">
               <button type="submit" class="btn btn-pink" style=" padding: 5px 15px; margin:0 auto; position:relative; float:none; display:block; margin-top:10px;"><span style="color: white; text-decoration: none;">Pesan</span>
               </button>
             </a>

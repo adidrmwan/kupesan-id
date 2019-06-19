@@ -31,9 +31,10 @@ class SearchController extends Controller
         $tema = KebayaKategori::get();
         $tema_fotografer = PGType::get();
         $thumbnailSpot = Partner::where('pr_type', '1')->where('status', '1')->get();
-        $thumbnailBusana = Partner::where('pr_type', '4')->where('status', '1')->get();
         $thumbnailPG = Partner::where('pr_type', '2')->where('status', '1')->get();
-        return view('home', compact('thumbnailSpot', 'thumbnailBusana', 'thumbnailPG', 'tema', 'tag', 'tema_fotografer'));
+        $thumbnailMUA = Partner::where('pr_type', '3')->where('status', '1')->get();
+        $thumbnailBusana = Partner::where('pr_type', '4')->where('status', '1')->get();
+        return view('home', compact('thumbnailSpot', 'thumbnailBusana', 'thumbnailPG', 'thumbnailMUA', 'tema', 'tag', 'tema_fotografer'));
     }
 
     public function searchKebaya(Request $request)

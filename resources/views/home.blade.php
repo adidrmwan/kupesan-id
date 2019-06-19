@@ -466,6 +466,37 @@
                 </div><!-- end page-heading -->
                 
                  <div class="owl-carousel owl-theme owl-custom-arrow" id="owl-mua-offers">
+                    @foreach($thumbnailMUA as $key => $data)
+                        <div class="item">
+                            <a href="{{route('detail.mua', ['id' => $data->user_id])}}">
+                            <div class="main-block tour-block">
+                                <div class="main-img">
+                                        @if(File::exists(public_path("logo/".$data->pr_logo.".jpg")))
+                                        <img src="{{ asset('logo/'.$data->pr_logo.'.jpg')  }}" class="img-responsive" alt="about-img" style="max-width: 100%; margin: 0 auto; height: 270px; width: auto; float: none; display: block;position: relative; " />
+                                        @elseif(File::exists(public_path("logo/".$data->pr_logo.".png")))
+                                        <img src="{{ asset('logo/'.$data->pr_logo.'.png')  }}" class="img-responsive" alt="about-img" style="max-width: 100%; margin: 0 auto; height: 270px; width: auto; float: none; display: block;position: relative;" />
+                                        @elseif(File::exists(public_path("logo/".$data->pr_logo.".jpeg")))
+                                        <img src="{{ asset('logo/'.$data->pr_logo.'.jpeg')  }}" class="img-responsive" alt="about-img" style="max-width: 100%; margin: 0 auto; height: 270px; width: auto; float: none; display: block;position: relative;" />
+                                        @elseif(File::exists(public_path("logo/".$data->pr_logo.".PNG")))
+                                        <img src="{{ asset('logo/'.$data->pr_logo.'.PNG')  }}" class="img-responsive" alt="about-img" style="max-width: 100%; margin: 0 auto; height: 270px; width: auto; float: none; display: block;position: relative;" />
+                                        @elseif(File::exists(public_path("logo/".$data->pr_logo.".JPEG")))
+                                        <img src="{{ asset('logo/'.$data->pr_logo.'.JPEG')  }}" class="img-responsive" alt="about-img" style="max-width: 100%; margin: 0 auto; height: 270px; width: auto; float: none; display: block;position: relative;" />
+                                        @elseif(File::exists(public_path("logo/".$data->pr_logo.".JPG")))
+                                        <img src="{{ asset('logo/'.$data->pr_logo.'.JPG')  }}" class="img-responsive" alt="about-img" style="max-width: 100%; margin: 0 auto; height: 270px; width: auto; float: none; display: block;position: relative;" />
+                                        @else
+                                        <img src="dist/images/mua.png" class="img-responsive" alt="about-img" style="max-width: 100%; margin: 0 auto; height: 270px; width: auto; float: none; display: block;position: relative;" />
+                                        @endif
+                                </div>
+                                <div class="main-info tour-info">
+                                    <div class="main-title tour-title">
+                                        <a> <b>{{$data->pr_name}}</b></a>
+                                        <p>Surabaya</p>
+                                    </div>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                    @endforeach
                     
                     <div class="item">
                         <div class="main-block tour-block">

@@ -324,6 +324,40 @@
           width: "100%"
         });
     </script>
+    <script type="text/javascript">
+      var tags = $('#tags-mua');
+        $(tags).select2({
+          data:[
+            {id:1,text:"Basic Make Up (Party, Graduation or Daily Make Up)"},
+            {id:2,text:"Wedding Make Up"},
+            {id:3,text:"Pre-Wedding Make Up"},
+            {id:4,text:"Engagement Make Up"},
+            {id:5,text:"Bridesmaid Make Up"},
+            {id:6,text:"Mother or Sister of The Bride Make Up"},
+            {id:7,text:"Photoshoot Make Up"},
+            // {id:8,text:"Hair Styling"},
+            // {id:9,text:"Hijab Do"},
+            // {id:10,text:"Commercial"},
+            // {id:11,text:"Colorful"},
+            // {id:12,text:"Monochrome"},
+            // {id:13,text:"Nature"},
+            // {id:14,text:"Caribbean"},
+            // {id:15,text:"Cosplay"},
+            // {id:16,text:"Tradisional"},
+            // {id:17,text:"Horor"},
+            // {id:18,text:"Pantai"},
+            // {id:19,text:"Hutan"},
+            // {id:20,text:"Minimalis"},
+            // {id:21,text:"Shabby Chic"},
+            // {id:22,text:"Mediteranian"},
+            // {id:23,text:"Bohemian"},
+            // {id:24,text:"Outdoor"},
+          ],
+          multiple: true,
+          placeholder: "Pilih Paket Tag",
+          width: "100%"
+        });
+    </script>
     @yield('script')
 </body>
 </html>
